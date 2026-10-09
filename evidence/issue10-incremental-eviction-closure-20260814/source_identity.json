@@ -1,0 +1,18 @@
+{
+  "ascend_commit": "913841ce6cbeed2e23a29ea40a8d91b158a9ebe0",
+  "candidate_binary_sha256": "bde08b1baa678a1cb62fb319180efbc4796a441a4e2678cb5c3361e23ab401af",
+  "client_sha256": "2cb541b7362521f13dc613cd12693f36a14ec280889c6e81f1385ac4531117e0",
+  "container_image": "quay.io/ascend/vllm-ascend:v0.23.0rc1-openeuler",
+  "container_image_digest": "sha256:f4c89c293e076453e9eef9edb5fb9669740dccbd3c48619a9f976d775fc29b81",
+  "current_repository_scope": "PrefixIndex component/shadow remains; full-sort remains production authority",
+  "device": 7,
+  "experimental_scope": "unmerged default-off production-bound candidate used only for the frozen A/B",
+  "global_sha256": "b06d32b299e5a6800794c2b0f5bdec5c3154502619f44c068436765875af36af",
+  "layers_sha256": "a1c0e8156dd20fa06fb97b45a3c19a37c330b06d33cdcd9f37277d8f272e0530",
+  "oracle_sha256": "d4acbd44eef6c17a553d33dfaedf7c582adac68d8b800616824bb9e965544938",
+  "parent_commit": "4c7305a1d41fc8aaef2704c7e0b602d16cf63e59",
+  "server_binary_sha256": "72481451b0cbf33b319981d4368db7d085c274c3f2360ff4d9f8a6127b8b8f2e",
+  "source_native_runtime_sha256": "71129c719c9abac4d700e365168bb1ce37a837179127ec30aad99cf6a90e34d7",
+  "source_state_sha256": "c2c6d77e43ce018a59c5fb001936c7cdfe2687d8d083ebb4dca42d39f2d70449",
+  "vllm_commit": "92237c2abd46d91c750e14f20fb53f8050795e21"
+}

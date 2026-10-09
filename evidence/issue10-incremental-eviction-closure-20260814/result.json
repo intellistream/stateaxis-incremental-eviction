@@ -1,0 +1,112 @@
+{
+  "candidate": {
+    "all_operation_endpoint_p50_ms": 136.564074,
+    "all_operation_endpoint_p95_ms": 3401.417208,
+    "candidate_selector": {
+      "calls": 384,
+      "max_ns": 120036,
+      "p50_ns_median": 93248,
+      "p95_ns_median": 95527,
+      "total_ns": 36002300
+    },
+    "full_sort_selector": {
+      "calls": 384,
+      "max_ns": 44600,
+      "p50_ns_median": 27648,
+      "p95_ns_median": 30516,
+      "total_ns": 10671905
+    },
+    "hbm_drift_max_bytes": 827392,
+    "hbm_used_max_bytes": 55226720256,
+    "hbm_used_min_bytes": 55225761792,
+    "http_operations": 1587,
+    "http_operations_per_s": 10.141310132657935,
+    "http_operations_per_s_run_stdev": 0.0539026806364576,
+    "pressure_prefill_p50_ms": 2184.681875,
+    "pressure_prefill_p95_ms": 4053.938306,
+    "pressure_prefill_requests": 384,
+    "runs": 3,
+    "successful_inference_p50_ms": 162.584729,
+    "successful_inference_p95_ms": 3829.404859,
+    "successful_inference_requests": 819,
+    "successful_inference_requests_per_s": 5.233606174320635,
+    "wall_elapsed_s": 156.488656716
+  },
+  "control": {
+    "all_operation_endpoint_p50_ms": 136.310427,
+    "all_operation_endpoint_p95_ms": 3427.430536,
+    "full_sort_selector": {
+      "calls": 384,
+      "max_ns": 53986,
+      "p50_ns_median": 27618,
+      "p95_ns_median": 30687,
+      "total_ns": 10719784
+    },
+    "hbm_drift_max_bytes": 1400832,
+    "hbm_used_max_bytes": 55227273216,
+    "hbm_used_min_bytes": 55225872384,
+    "http_operations": 1587,
+    "http_operations_per_s": 10.164399873191222,
+    "http_operations_per_s_run_stdev": 0.04299484492028421,
+    "pressure_prefill_p50_ms": 2191.124634,
+    "pressure_prefill_p95_ms": 4070.934096,
+    "pressure_prefill_requests": 384,
+    "runs": 3,
+    "successful_inference_p50_ms": 162.82577,
+    "successful_inference_p95_ms": 3855.121679,
+    "successful_inference_requests": 819,
+    "successful_inference_requests_per_s": 5.245522051760309,
+    "wall_elapsed_s": 156.133172622
+  },
+  "correctness": {
+    "eviction_decisions_per_run": 128,
+    "fallbacks": 0,
+    "mismatches": 0,
+    "pressure_exact_per_run": 128,
+    "rebuilds": 0,
+    "replacement_exact_per_run": 128,
+    "runs_per_arm": 3,
+    "selected_per_run": 128,
+    "stale_generation_rejections_per_run": 128,
+    "stale_pops": 0
+  },
+  "decision": "The experimental candidate was exact but its isolated selector was slower at the matched 17-state serving capacity. It was not promoted; repository authority remains full-sort. Endpoint deltas are mixed and no end-to-end superiority claim is made.",
+  "delta": {
+    "all_operation_endpoint_p50_percent": 0.18608040894774192,
+    "all_operation_endpoint_p95_percent": -0.7589746233153116,
+    "http_operations_per_s_percent": -0.22716285094397382,
+    "selector_p50_ratio_candidate_over_full_sort": 3.372685185185185,
+    "selector_p95_ratio_candidate_over_full_sort": 3.1303906147594702,
+    "selector_total_ratio_candidate_over_full_sort": 3.3735588913132193,
+    "successful_inference_p50_percent": -0.14803614931468978,
+    "successful_inference_p95_percent": -0.6670819274028794,
+    "successful_inference_requests_per_s_percent": -0.22716285094398492
+  },
+  "issue": 10,
+  "matched_identity": {
+    "ascend_commit": "913841ce6cbeed2e23a29ea40a8d91b158a9ebe0",
+    "candidate_binary_sha256": "bde08b1baa678a1cb62fb319180efbc4796a441a4e2678cb5c3361e23ab401af",
+    "client_sha256": "2cb541b7362521f13dc613cd12693f36a14ec280889c6e81f1385ac4531117e0",
+    "container_image": "quay.io/ascend/vllm-ascend:v0.23.0rc1-openeuler",
+    "device": 7,
+    "global_sha256": "b06d32b299e5a6800794c2b0f5bdec5c3154502619f44c068436765875af36af",
+    "layers_sha256": "a1c0e8156dd20fa06fb97b45a3c19a37c330b06d33cdcd9f37277d8f272e0530",
+    "oracle_sha256": "d4acbd44eef6c17a553d33dfaedf7c582adac68d8b800616824bb9e965544938",
+    "parent_commit": "4c7305a1d41fc8aaef2704c7e0b602d16cf63e59",
+    "server_binary_sha256": "72481451b0cbf33b319981d4368db7d085c274c3f2360ff4d9f8a6127b8b8f2e",
+    "vllm_commit": "92237c2abd46d91c750e14f20fb53f8050795e21"
+  },
+  "performance_claim": false,
+  "rejected_aggregation": {
+    "classification": "invalid-throughput-denominator",
+    "correct_metric_name": "http_operations_per_s",
+    "invalid_formula": "request_count / sum(per_request_latency_seconds)",
+    "old_candidate_mislabeled_requests_per_s": 1.600220467827307,
+    "old_control_mislabeled_requests_per_s": 1.59286975982136,
+    "reason": "the 128 pressure requests overlap, so summed request latency is not wall time",
+    "replacement_formula": "sum(http_operation_count) / sum(max(completed_ns)-min(started_ns) per run)"
+  },
+  "schema_version": 1,
+  "status": "closed-negative-not-promoted",
+  "version": "issue10-incremental-eviction-closure-20260814"
+}

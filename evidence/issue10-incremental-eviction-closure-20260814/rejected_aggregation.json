@@ -1,0 +1,9 @@
+{
+  "classification": "invalid-throughput-denominator",
+  "correct_metric_name": "http_operations_per_s",
+  "invalid_formula": "request_count / sum(per_request_latency_seconds)",
+  "old_candidate_mislabeled_requests_per_s": 1.600220467827307,
+  "old_control_mislabeled_requests_per_s": 1.59286975982136,
+  "reason": "the 128 pressure requests overlap, so summed request latency is not wall time",
+  "replacement_formula": "sum(http_operation_count) / sum(max(completed_ns)-min(started_ns) per run)"
+}

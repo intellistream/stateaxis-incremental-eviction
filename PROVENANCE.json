@@ -1,0 +1,13 @@
+{
+  "schema_version": "stateaxis-mod-provenance/v1",
+  "source_repository": "Qixin-Gaoke/stateaxis",
+  "source_commit": "7562b5fa6f42e2e045a877b53ac934739e2cf230",
+  "source_issues": [
+    10
+  ],
+  "source_evidence": "results/issue10-incremental-eviction-closure-20260814",
+  "copied_evidence": "evidence/issue10-incremental-eviction-closure-20260814",
+  "copied_evidence_sha256": "d834c9fed8873d494a838935a2ad02a8f0ef05cc71002b167fe4699d5460ead6",
+  "qualification_inherited": false,
+  "implementation_extracted": false
+}

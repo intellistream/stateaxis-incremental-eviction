@@ -1,0 +1,8 @@
+issue=10 version=issue10-incremental-eviction-closure-20260814
+identity_gate=pass matched_runs=6 control=3 candidate=3
+correctness=pass decisions_per_run=128 selected_per_run=128 replacement_exact=128 pressure_exact=128 stale_rejected=128 fallback=0 mismatch=0 rebuild=0 stale_pop=0
+control http_operations=1587 all_p50_ms=136.310427 all_p95_ms=3427.430536 operations_s=10.164400 successful_inference_requests=819 successful_inference_s=5.245522
+candidate http_operations=1587 all_p50_ms=136.564074 all_p95_ms=3401.417208 operations_s=10.141310 successful_inference_requests=819 successful_inference_s=5.233606
+selector control_candidate_arm_p50_ns=27648 candidate_p50_ns=93248 control_p95_ns=30516 candidate_p95_ns=95527
+rejected_old_throughput control=1.592870 candidate=1.600220 reason=summed_overlapping_request_latency
+decision=closed-negative-not-promoted repository_authority=full-sort speedup_claim=false

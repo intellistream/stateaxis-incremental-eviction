@@ -1,0 +1,13 @@
+{
+  "candidate_default_off": true,
+  "candidate_in_current_production_path": false,
+  "candidate_runs": 3,
+  "cleanup": "experiment container removed; business containers unchanged",
+  "control_runs": 3,
+  "exact": true,
+  "issue": 10,
+  "repository_authority": "full-sort",
+  "schema_version": 1,
+  "speedup_claim": false,
+  "status": "closed-negative-not-promoted"
+}
