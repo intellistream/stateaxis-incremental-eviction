@@ -22,7 +22,7 @@
     "rollback_contract": "Disable or forget the descriptor and run the unchanged StateAxis host without this MOD."
   },
   "scope": {
-    "mechanism": "incremental_state_eviction_index",
+    "mechanism": "generation_safe_bitmap_eviction_index",
     "supported_workloads": [],
     "out_of_scope": [
       "general performance claims",
@@ -30,14 +30,19 @@
     ]
   },
   "evidence": {
-    "qualification": "not-beneficial-in-tested-cell",
-    "latest_result": "evidence/issue10-incremental-eviction-closure-20260814",
+    "qualification": "component-positive-online-unqualified",
+    "latest_result": "evidence/bitmap-crossover-kunpeng920-20261010",
     "index": "EVIDENCE.md",
     "performance_claims": [
       {
         "label": "not-beneficial-in-tested-cell",
         "scope": "frozen StateAxis source evidence only",
         "result": "Selections were equivalent, but the incremental selector was slower than full sort."
+      },
+      {
+        "label": "component-repeated-crossover-positive",
+        "scope": "Kunpeng 920 CPU selector component only",
+        "result": "The bounded bitmap path reduced 17-state single-victim P50 by 65.12%; bulk selection remains on full sort."
       }
     ]
   }

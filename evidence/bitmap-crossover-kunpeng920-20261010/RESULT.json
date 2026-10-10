@@ -1,0 +1,55 @@
+{
+  "schema_version": "stateaxis-mod-component-crossover/v1",
+  "evidence_label": "component-repeated-crossover-positive",
+  "performance_qualified": false,
+  "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
+  "mechanism": "generation-safe-64-slot-eligibility-bitmap",
+  "host": {
+    "architecture": "aarch64",
+    "cpu": "Kunpeng 920",
+    "kernel": "5.15.0-25-generic",
+    "rustc": "1.98.1 (48a229cea 2026-09-01)",
+    "llvm": "22.1.8"
+  },
+  "method": {
+    "independent_processes": 3,
+    "iterations_per_cell": 20000,
+    "aggregation": "median of per-process P50 and P95",
+    "matched_return_value": "both arms clone selected handles"
+  },
+  "sha256": {
+    "raw_csv": "1a614637d1c6bd47b156dfa0d7fc0d660763d772a7f038e57e53ab70a590c2b2",
+    "cargo_toml": "3174fb19db61c6a5e912f4ebac3e5361fcdad2cb4c865c6cc0696573f371a3b0",
+    "cargo_lock": "1899441e6e9cd727b5f6d6e743ea864851860109dd0faa5d380f79648108b0c6",
+    "library": "fc926113aeacc354e06bc6dde776ad187e1ed5fbb0cb20bc9340fdb2e545dc4f",
+    "benchmark": "3d8b956e548c02d0d9cb9f157eb5eb0899e3039f5ae1fb6e82ea590696b9b324"
+  },
+  "accepted_cells": [
+    {"records": 17, "victims": 1, "reference_p50_ns": 430, "bitmap_p50_ns": 150, "p50_change_percent": -65.11627906976744},
+    {"records": 17, "victims": 4, "reference_p50_ns": 510, "bitmap_p50_ns": 370, "p50_change_percent": -27.450980392156865},
+    {"records": 32, "victims": 1, "reference_p50_ns": 890, "bitmap_p50_ns": 200, "p50_change_percent": -77.52808988764045},
+    {"records": 32, "victims": 4, "reference_p50_ns": 980, "bitmap_p50_ns": 660, "p50_change_percent": -32.6530612244898},
+    {"records": 64, "victims": 1, "reference_p50_ns": 2050, "bitmap_p50_ns": 350, "p50_change_percent": -82.92682926829268},
+    {"records": 64, "victims": 4, "reference_p50_ns": 2100, "bitmap_p50_ns": 1220, "p50_change_percent": -41.904761904761905}
+  ],
+  "rejected_cell": {
+    "records": 17,
+    "victims": 8,
+    "reference_p50_ns": 630,
+    "bitmap_p50_ns": 730,
+    "p50_change_percent": 15.873015873015872,
+    "disposition": "full-sort-fallback"
+  },
+  "activation_boundary": {
+    "max_live_states": 64,
+    "max_bitmap_victims": 4,
+    "overflow": "fail-closed",
+    "bulk_selection": "full-sort-fallback"
+  },
+  "qualification_blockers": [
+    "not wired to the StateAxis host",
+    "no matched online ON/OFF services",
+    "no NPU or model execution",
+    "no end-to-end latency or peak HBM evidence"
+  ]
+}
