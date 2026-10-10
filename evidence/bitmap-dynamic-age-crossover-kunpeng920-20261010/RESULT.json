@@ -1,0 +1,54 @@
+{
+  "schema_version": "stateaxis-mod-component-crossover/v1",
+  "evidence_label": "component-repeated-crossover-positive-single-victim",
+  "performance_qualified": false,
+  "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
+  "mechanism": "generation-safe-64-slot-dynamic-age-eligibility-bitmap",
+  "supersedes_for_activation": "../bitmap-crossover-kunpeng920-20261010/RESULT.json",
+  "host": {
+    "architecture": "aarch64",
+    "cpu": "Kunpeng 920",
+    "kernel": "5.15.0-25-generic",
+    "rustc": "1.98.1 (48a229cea 2026-09-01)",
+    "llvm": "22.1.8"
+  },
+  "method": {
+    "independent_processes": 3,
+    "iterations_per_cell": 20000,
+    "aggregation": "median of per-process P50 and P95",
+    "score": "value_density / sqrt(max(age_seconds, 1))",
+    "matched_return_value": "both arms clone selected handles"
+  },
+  "sha256": {
+    "raw_csv": "8cba0035499c0dcf56142292de3a61ca19e79d41e8b6d098da14c263cc659dc2",
+    "cargo_toml": "3174fb19db61c6a5e912f4ebac3e5361fcdad2cb4c865c6cc0696573f371a3b0",
+    "cargo_lock": "1899441e6e9cd727b5f6d6e743ea864851860109dd0faa5d380f79648108b0c6",
+    "library": "b258330b1cc65b6457674099b1ce291f0c50133fbb669f8d16fd6dc47c59fe46",
+    "benchmark": "64df0a598e586b2a37891f19f7ba7aad22f03759dec825aaab0c4c929975b04c"
+  },
+  "accepted_cells": [
+    {"records": 17, "victims": 1, "reference_p50_ns": 600, "reference_p95_ns": 610, "bitmap_p50_ns": 300, "bitmap_p95_ns": 310, "p50_change_percent": -50.0},
+    {"records": 32, "victims": 1, "reference_p50_ns": 1190, "reference_p95_ns": 1210, "bitmap_p50_ns": 480, "bitmap_p95_ns": 490, "p50_change_percent": -59.66386554621849},
+    {"records": 64, "victims": 1, "reference_p50_ns": 2660, "reference_p95_ns": 2670, "bitmap_p50_ns": 900, "bitmap_p95_ns": 910, "p50_change_percent": -66.1654135338346}
+  ],
+  "rejected_cells": [
+    {"records": 17, "victims": 4, "reference_p50_ns": 670, "bitmap_p50_ns": 930, "p50_change_percent": 38.80597014925374},
+    {"records": 17, "victims": 8, "reference_p50_ns": 860, "bitmap_p50_ns": 3060, "p50_change_percent": 255.81395348837208},
+    {"records": 32, "victims": 4, "reference_p50_ns": 1280, "bitmap_p50_ns": 1710, "p50_change_percent": 33.59375},
+    {"records": 32, "victims": 8, "reference_p50_ns": 1470, "bitmap_p50_ns": 5600, "p50_change_percent": 280.95238095238096},
+    {"records": 64, "victims": 4, "reference_p50_ns": 2740, "bitmap_p50_ns": 3380, "p50_change_percent": 23.357664233576642},
+    {"records": 64, "victims": 8, "reference_p50_ns": 2940, "bitmap_p50_ns": 9010, "p50_change_percent": 206.4625850340136}
+  ],
+  "activation_boundary": {
+    "max_live_states": 64,
+    "max_bitmap_victims": 1,
+    "overflow": "fail-closed",
+    "bulk_selection": "full-sort-fallback"
+  },
+  "qualification_blockers": [
+    "not wired to the StateAxis host",
+    "no matched online ON/OFF services",
+    "no NPU or model execution",
+    "no end-to-end latency or peak HBM evidence"
+  ]
+}
