@@ -5,9 +5,9 @@ Extension ID: `org.vllm-hust.stateaxis-incremental-eviction`
 Incremental candidate index replacing full-sort state eviction.
 
 This repository is the independent MOD boundary for StateAxis issue #10.
-It is deliberately `import_only`, default-off, and cannot be enabled. The split does
-not inherit correctness, device, performance, or publication qualification from the
-aggregate StateAxis repository.
+It is default-off and can be enabled only through the vLLM-HUST Extension Manager
+StateAxis provider in explicit experiment mode. The split does not inherit correctness,
+device, performance, or publication qualification from the aggregate StateAxis repository.
 
 ## Evidence boundary
 
@@ -35,15 +35,13 @@ vllm-hust-ext extension inspect org.vllm-hust.stateaxis-incremental-eviction
 vllm-hust-ext extension check org.vllm-hust.stateaxis-incremental-eviction
 ```
 
-Discovery does not enable the MOD. A future active revision must extract an
-independently reviewable implementation, declare exclusive resources where needed,
-and pass exactness, lifecycle, release, failure-recovery, and matched real-online
-gates.
-
-The independently reviewable implementation now lives under `native/`, but the
-Manifest intentionally remains `import_only` until the StateAxis host consumes the
-fail-closed bitmap/full-sort crossover contract. Component timing must not be
-restated as online or NPU benefit.
+Discovery alone does not enable the MOD. The active Manifest 0.3 contract is accepted
+only with `experiment_mode=true`, a verified `RESEARCH_MANIFEST.json` digest, and the
+matching host identity. The independently reviewable implementation lives under
+`native/`; StateAxis host commit `742d4860322dd0e9e55163752d7bda311b6f55c7`
+wires it into the real eviction lifecycle and exports decisions, authority applications,
+full-sort fallbacks, and capacity disables. Component timing must not be restated as
+online or NPU benefit.
 
 ## Validate
 

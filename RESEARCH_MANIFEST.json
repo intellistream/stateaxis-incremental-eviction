@@ -1,0 +1,38 @@
+{
+  "schema_version": "stateaxis-research-mod/v1",
+  "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
+  "version": "0.2.0",
+  "mechanism": {
+    "name": "generation-safe-bounded-bitmap-eviction",
+    "bitmap_enabled": true,
+    "single_victim_only": true,
+    "max_index_states": 64,
+    "fail_closed": true
+  },
+  "host_contract": {
+    "provider": "stateaxis",
+    "api_range": ">=1,<2",
+    "implementation": "statecentric_engine:parse_incremental_eviction_additional_config",
+    "effect_counters": [
+      "bitmap_eviction_decisions",
+      "bitmap_eviction_authority_applied",
+      "bitmap_eviction_full_sort_fallbacks",
+      "bitmap_eviction_capacity_disables"
+    ]
+  },
+  "qualification": {
+    "performance_qualified": false,
+    "evidence_label": "component-repeated-crossover-positive-experimental",
+    "scope": "Kunpeng 920 CPU selector component, 17/32/64 states, exactly one victim",
+    "blockers": [
+      "matched real-online OFF/ON repetitions are not complete",
+      "end-to-end latency and throughput are not measured",
+      "peak HBM and strict output equivalence are not measured"
+    ]
+  },
+  "source": {
+    "repository": "Qixin-Gaoke/stateaxis",
+    "commit": "742d4860322dd0e9e55163752d7bda311b6f55c7",
+    "issue": 10
+  }
+}

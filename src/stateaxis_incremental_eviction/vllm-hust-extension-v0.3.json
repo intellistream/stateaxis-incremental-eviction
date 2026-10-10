@@ -1,7 +1,7 @@
 {
   "schema_version": "0.3-experimental",
   "extension_id": "org.vllm-hust.stateaxis-incremental-eviction",
-  "extension_version": "0.1.0.dev0",
+  "extension_version": "0.2.0",
   "kind": "in_process_plugin",
   "host": {
     "provider": "stateaxis",
@@ -23,10 +23,9 @@
   ],
   "implementation": [
     {
-      "type": "python_module",
-      "module": "stateaxis_incremental_eviction",
-      "object": "StateaxisIncrementalEvictionContractProposal",
-      "status": "import_only"
+      "type": "host_builtin",
+      "symbol": "statecentric_engine:parse_incremental_eviction_additional_config",
+      "status": "active"
     }
   ],
   "requires_services": [],
@@ -44,13 +43,31 @@
         "device"
       ],
       "isolation": "trusted_in_process",
-      "implementation_ref": "stateaxis_incremental_eviction:StateaxisIncrementalEvictionContractProposal",
+      "implementation_ref": "stateaxis_incremental_eviction:incremental_eviction",
       "permissions": []
     }
   ],
   "activation": {
-    "entry_points": [],
+    "entry_points": [
+      {
+        "group": "stateaxis.mod_handlers",
+        "name": "incremental_eviction"
+      }
+    ],
     "environment": {},
-    "additional_config": {}
+    "additional_config": {
+      "stateaxis_incremental_eviction": {
+        "bitmap_enabled": true,
+        "single_victim_only": true,
+        "max_index_states": 64,
+        "fail_closed": true
+      },
+      "stateaxis_mod": {
+        "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
+        "version": "0.2.0",
+        "manifest_sha256": "abae21ac5270c9cbe92df592ccc3657b83e935a6efdb8d6c18d81c36950452d7",
+        "performance_qualified": false
+      }
+    }
   }
 }
