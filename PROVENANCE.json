@@ -16,7 +16,7 @@
     "activation_status": "active_experimental",
     "host_repository": "Qixin-Gaoke/stateaxis",
     "host_commit": "742d4860322dd0e9e55163752d7bda311b6f55c7",
-    "research_manifest_sha256": "abae21ac5270c9cbe92df592ccc3657b83e935a6efdb8d6c18d81c36950452d7",
+    "research_manifest_sha256": "798f44ff1f8389c4e31938021ed9e7590bfc43b08765e5151bf0814ab4dda6bf",
     "performance_qualified": false
   },
   "licensing": {

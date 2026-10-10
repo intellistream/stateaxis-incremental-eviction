@@ -1,0 +1,84 @@
+{
+  "all_error_rates_zero": true,
+  "all_resources_released": true,
+  "effect_exercised": true,
+  "evidence_label": "matched_real_online_experimental_unqualified",
+  "identity": {
+    "backend": "transformers + torch_npu",
+    "dtype": "bf16",
+    "graph_mode": "eager",
+    "hardware": "1x visible logical Ascend 910B2 (physical NPU 6)",
+    "manager_commit": "00d1b940dc6ce8d60e2cd28708b80d80e9c33a09",
+    "manager_dirty": false,
+    "mod_commit": "17e51a604988165523628c9e8d126949054c64e6",
+    "mod_dirty": false,
+    "model_config_sha256": "7463bb0ea78315365e6c6b74de4e73bbcc8359dfb0c5a737584e077d42c0b03c",
+    "model_path": "/models/Qwen2.5-7B-Instruct",
+    "research_manifest_sha256": "abae21ac5270c9cbe92df592ccc3657b83e935a6efdb8d6c18d81c36950452d7",
+    "stateaxis_commit": "85e2b9095c01ad13f290553b789aa8f4a0ae10d5",
+    "stateaxis_dirty": false
+  },
+  "median_paired_deltas": {
+    "e2e_p50_delta_percent": -0.26087133687657804,
+    "output_token_throughput_delta_percent": 0.005021623229306549,
+    "peak_hbm_delta_mb": -1,
+    "request_throughput_delta_percent": 0.005021623229306549,
+    "tpot_p50_delta_percent": -0.3540770462349907,
+    "ttft_p50_delta_percent": -0.28223357299583807
+  },
+  "output_exact_across_all_runs": true,
+  "pair_order": [
+    [
+      "OFF",
+      "ON"
+    ],
+    [
+      "ON",
+      "OFF"
+    ],
+    [
+      "OFF",
+      "ON"
+    ]
+  ],
+  "paired_deltas": [
+    {
+      "e2e_p50_delta_percent": 1.3092654560878714,
+      "output_token_throughput_delta_percent": -1.2761537435505899,
+      "pair": 1,
+      "peak_hbm_delta_mb": 1,
+      "request_throughput_delta_percent": -1.2761537435505899,
+      "tpot_p50_delta_percent": 1.353186002191542,
+      "ttft_p50_delta_percent": 1.1123672125606499
+    },
+    {
+      "e2e_p50_delta_percent": -0.26087133687657804,
+      "output_token_throughput_delta_percent": 0.005021623229306549,
+      "pair": 2,
+      "peak_hbm_delta_mb": -1,
+      "request_throughput_delta_percent": 0.005021623229306549,
+      "tpot_p50_delta_percent": -0.3540770462349907,
+      "ttft_p50_delta_percent": -0.28223357299583807
+    },
+    {
+      "e2e_p50_delta_percent": -3.733732866754569,
+      "output_token_throughput_delta_percent": 3.256939541083015,
+      "pair": 3,
+      "peak_hbm_delta_mb": -2,
+      "request_throughput_delta_percent": 3.256939541083015,
+      "tpot_p50_delta_percent": -4.18092518371399,
+      "ttft_p50_delta_percent": -3.752679433738859
+    }
+  ],
+  "performance_qualified": false,
+  "qualification_note": "Experimental matched evidence; promotion requires repeated positive end-to-end deltas without correctness or lifecycle regressions.",
+  "runs": [
+    "pair-1-1-off",
+    "pair-1-2-on",
+    "pair-2-1-on",
+    "pair-2-2-off",
+    "pair-3-1-off",
+    "pair-3-2-on"
+  ],
+  "schema_version": "stateaxis.incremental-eviction.matched-real-npu-summary/v1"
+}

@@ -1,0 +1,15 @@
+{
+  "backend": "transformers + torch_npu",
+  "dtype": "bf16",
+  "graph_mode": "eager",
+  "hardware": "1x visible logical Ascend 910B2 (physical NPU 6)",
+  "manager_commit": "00d1b940dc6ce8d60e2cd28708b80d80e9c33a09",
+  "manager_dirty": false,
+  "mod_commit": "17e51a604988165523628c9e8d126949054c64e6",
+  "mod_dirty": false,
+  "model_config_sha256": "7463bb0ea78315365e6c6b74de4e73bbcc8359dfb0c5a737584e077d42c0b03c",
+  "model_path": "/models/Qwen2.5-7B-Instruct",
+  "research_manifest_sha256": "abae21ac5270c9cbe92df592ccc3657b83e935a6efdb8d6c18d81c36950452d7",
+  "stateaxis_commit": "85e2b9095c01ad13f290553b789aa8f4a0ae10d5",
+  "stateaxis_dirty": false
+}

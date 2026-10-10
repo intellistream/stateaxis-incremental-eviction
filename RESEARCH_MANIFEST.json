@@ -1,7 +1,7 @@
 {
   "schema_version": "stateaxis-research-mod/v1",
   "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "mechanism": {
     "name": "generation-safe-bounded-bitmap-eviction",
     "bitmap_enabled": true,
@@ -22,12 +22,12 @@
   },
   "qualification": {
     "performance_qualified": false,
-    "evidence_label": "component-repeated-crossover-positive-experimental",
-    "scope": "Kunpeng 920 CPU selector component, 17/32/64 states, exactly one victim",
+    "evidence_label": "matched-real-online-mixed-unqualified",
+    "scope": "Qwen2.5-7B-Instruct, eager BF16, one Ascend 910B2, 17-state capacity, sequential 64-request churn workload",
     "blockers": [
-      "matched real-online OFF/ON repetitions are not complete",
-      "end-to-end latency and throughput are not measured",
-      "peak HBM and strict output equivalence are not measured"
+      "three matched request-throughput deltas disagree in sign: -1.276%, +0.005%, and +3.257%",
+      "the median request-throughput delta is only +0.005%, so a repeated positive online effect is not established",
+      "the result is workload- and model-scoped and does not transfer to other state counts, concurrency, graph modes, or models"
     ]
   },
   "source": {
