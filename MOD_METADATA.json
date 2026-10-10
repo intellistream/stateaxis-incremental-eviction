@@ -18,12 +18,14 @@
   "lifecycle": {
     "status": "experimental",
     "default_enabled": false,
-    "activation_contract": "Import-only research descriptor; activation is refused until the StateAxis host contract and independent implementation are reviewed.",
-    "rollback_contract": "Disable or forget the descriptor and run the unchanged StateAxis host without this MOD."
+    "activation_contract": "Extension Manager/ECPA forwards the hash-bound experimental configuration to StateAxis; the host admits only the bounded 64-state, single-victim, fail-closed bitmap path.",
+    "rollback_contract": "Disable the extension or omit --additional-config; StateAxis then retains the unchanged full-sort eviction authority."
   },
   "scope": {
     "mechanism": "generation_safe_bitmap_eviction_index",
-    "supported_workloads": [],
+    "supported_workloads": [
+      "experimental StateAxis Native Engine runs with at most 64 resident states and exactly one required victim"
+    ],
     "out_of_scope": [
       "general performance claims",
       "automatic inheritance from StateAxis aggregate evidence"
