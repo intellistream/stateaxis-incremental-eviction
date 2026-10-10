@@ -24,7 +24,7 @@ def research_manifest_path() -> Path:
 def test_policy_is_discoverable_and_experimentally_activatable() -> None:
     manifest = load_manifest(manifest_path())
     assert manifest.bundle_id == "org.vllm-hust.stateaxis-incremental-eviction"
-    assert manifest.bundle_version == "0.2.0"
+    assert manifest.bundle_version == "0.2.1"
     assert manifest.schema_version == "0.3-experimental"
     assert activation_blocker(manifest) is None
     additional = dict(manifest.activation.additional_config)
@@ -60,7 +60,7 @@ def test_native_candidate_is_extracted_and_bound_to_the_active_host() -> None:
 def test_research_manifest_matches_package_contract() -> None:
     payload = json.loads(research_manifest_path().read_text())
     assert payload["mod_id"] == stateaxis_incremental_eviction.MOD_ID
-    assert payload["version"] == "0.2.0"
+    assert payload["version"] == "0.2.1"
     assert payload["mechanism"] == {
         "name": "generation-safe-bounded-bitmap-eviction",
         "bitmap_enabled": True,
@@ -109,3 +109,22 @@ def test_handler_refuses_out_of_contract_variants() -> None:
         assert "bounded 64-state" in str(error)
     else:
         raise AssertionError("out-of-contract capacity must fail closed")
+
+
+def test_matched_real_npu_result_stays_unqualified_and_effectful() -> None:
+    repository = Path(stateaxis_incremental_eviction.__file__).parents[2]
+    evidence = repository / "evidence" / "qwen25-7b-matched-real-npu-20261010"
+    summary = json.loads((evidence / "SUMMARY.json").read_text())
+    assert summary["output_exact_across_all_runs"] is True
+    assert summary["effect_exercised"] is True
+    assert summary["all_resources_released"] is True
+    assert summary["all_error_rates_zero"] is True
+    assert summary["performance_qualified"] is False
+    assert len(summary["paired_deltas"]) == 3
+    assert [
+        pair["request_throughput_delta_percent"] for pair in summary["paired_deltas"]
+    ] == [
+        -1.2761537435505899,
+        0.005021623229306549,
+        3.256939541083015,
+    ]

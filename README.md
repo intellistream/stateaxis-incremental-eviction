@@ -11,7 +11,7 @@ device, performance, or publication qualification from the aggregate StateAxis r
 
 ## Evidence boundary
 
-Status: **component-positive candidate; online untested and not qualified**.
+Status: **component-positive candidate; matched online result mixed and not qualified**.
 
 The preserved lazy-heap candidate was exact but about 3.37x slower than full sort
 at the measured 17-state serving capacity. A newly authored bounded bitmap index
@@ -22,6 +22,15 @@ by 50.00% at 17 states, 59.66% at 32 states, and 66.17% at 64 states. Every
 four/eight-victim cell regressed, so only exactly one victim may use the bitmap;
 bulk selection must fail closed to full sort. See
 `evidence/bitmap-dynamic-age-crossover-kunpeng920-20261010/`.
+
+The first matched real-NPU campaign used Qwen2.5-7B-Instruct, eager BF16 on one
+Ascend 910B2, three fresh processes per arm, and the fixed order `OFF/ON`,
+`ON/OFF`, `OFF/ON`. ON executed 47 authoritative single-victim evictions per
+run with zero fallback. Outputs were token-exact, errors were zero, and every
+run released device resources. Request-throughput deltas were -1.276%,
++0.005%, and +3.257% (median +0.005%); the signs did not repeat. This is an
+admissible workload-scoped neutral/mixed result, not evidence of an online
+gain. See `evidence/qwen25-7b-matched-real-npu-20261010/`.
 
 The copied evidence and its SHA-256 are recorded in `PROVENANCE.json`. Negative,
 failed, and inconclusive results are retained. Microbenchmarks and component results

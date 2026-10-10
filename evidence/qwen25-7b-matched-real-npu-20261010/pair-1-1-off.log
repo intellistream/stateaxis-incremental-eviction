@@ -1,0 +1,7 @@
+/root/frontier-kvmat-env/lib/python3.12/site-packages/transformers/loss/loss_for_object_detection.py:27: UserWarning: A NumPy version >=1.22.4 and <2.3.0 is required for this version of SciPy (detected version 2.5.3)
+  from scipy.optimize import linear_sum_assignment
+loading model=/models/Qwen2.5-7B-Instruct device=npu:0 dtype=bf16 attention=eager
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 3788.14it/s]
+[W1010 10:11:23.667106642 NPUCachingAllocator.cpp:202] Warning: The current CANN and HDK(driver) versions require processing for 32 padding size, with memory allocation. (function operator())
+backend ready
+2026-10-10T10:11:35.584764Z  INFO state-centric engine ready listen=127.0.0.1:18100

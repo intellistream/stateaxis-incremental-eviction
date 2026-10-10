@@ -32,8 +32,8 @@
     ]
   },
   "evidence": {
-    "qualification": "component-positive-online-unqualified",
-    "latest_result": "evidence/bitmap-crossover-kunpeng920-20261010",
+    "qualification": "matched-real-online-mixed-unqualified",
+    "latest_result": "evidence/qwen25-7b-matched-real-npu-20261010",
     "index": "EVIDENCE.md",
     "performance_claims": [
       {
@@ -45,6 +45,11 @@
         "label": "component-repeated-crossover-positive",
         "scope": "Kunpeng 920 CPU selector component only",
         "result": "The bounded bitmap path reduced 17-state single-victim P50 by 65.12%; bulk selection remains on full sort."
+      },
+      {
+        "label": "matched-real-online-mixed-unqualified",
+        "scope": "Qwen2.5-7B-Instruct, eager BF16, one Ascend 910B2, 17-state capacity, sequential 64-request churn workload",
+        "result": "Three paired request-throughput deltas were -1.276%, +0.005%, and +3.257% (median +0.005%); signs did not repeat, so no online gain is qualified."
       }
     ]
   }

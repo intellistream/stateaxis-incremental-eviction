@@ -1,0 +1,9 @@
+{
+  "experiment_mode": true,
+  "host_version": "1.0.0",
+  "host_api_version": "1.0.0",
+  "protocol_versions": {
+    "stateaxis.mod-proposal.incremental-eviction": "1.0.0"
+  },
+  "research_manifest_path": "/root/stateaxis-topic-mods/repositories/stateaxis-incremental-eviction/RESEARCH_MANIFEST.json"
+}

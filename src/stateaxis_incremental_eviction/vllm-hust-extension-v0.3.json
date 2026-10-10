@@ -1,7 +1,7 @@
 {
   "schema_version": "0.3-experimental",
   "extension_id": "org.vllm-hust.stateaxis-incremental-eviction",
-  "extension_version": "0.2.0",
+  "extension_version": "0.2.1",
   "kind": "in_process_plugin",
   "host": {
     "provider": "stateaxis",
@@ -64,8 +64,8 @@
       },
       "stateaxis_mod": {
         "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
-        "version": "0.2.0",
-        "manifest_sha256": "abae21ac5270c9cbe92df592ccc3657b83e935a6efdb8d6c18d81c36950452d7",
+        "version": "0.2.1",
+        "manifest_sha256": "798f44ff1f8389c4e31938021ed9e7590bfc43b08765e5151bf0814ab4dda6bf",
         "performance_qualified": false
       }
     }
