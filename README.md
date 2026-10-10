@@ -15,11 +15,13 @@ Status: **component-positive candidate; online untested and not qualified**.
 
 The preserved lazy-heap candidate was exact but about 3.37x slower than full sort
 at the measured 17-state serving capacity. A newly authored bounded bitmap index
-removes the heap/map clone from selection. Across three component processes it
-reduced the 17-state single-victim P50 from 430 ns to 150 ns (-65.12%). The
-17-state/eight-victim cell regressed 15.87%, so selections above four victims
-explicitly fall back to full sort. See
-`evidence/bitmap-crossover-kunpeng920-20261010/`.
+removes the heap/map clone from selection. The first crossover precomputed
+utility and is retained as superseded evidence. A stricter three-process rerun
+computed the dynamic age-adjusted score in both arms: single-victim P50 improved
+by 50.00% at 17 states, 59.66% at 32 states, and 66.17% at 64 states. Every
+four/eight-victim cell regressed, so only exactly one victim may use the bitmap;
+bulk selection must fail closed to full sort. See
+`evidence/bitmap-dynamic-age-crossover-kunpeng920-20261010/`.
 
 The copied evidence and its SHA-256 are recorded in `PROVENANCE.json`. Negative,
 failed, and inconclusive results are retained. Microbenchmarks and component results

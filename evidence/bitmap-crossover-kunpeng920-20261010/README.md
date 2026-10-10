@@ -1,7 +1,10 @@
 # Bitmap eviction component crossover — Kunpeng 920
 
-Evidence label: `component-repeated-crossover-positive`; online performance
-qualification: `false`.
+Evidence label: `component-crossover-superseded-precomputed-utility`; online
+performance qualification: `false`. This evidence is retained unchanged as a
+historical result, but its activation boundary is superseded by
+`../bitmap-dynamic-age-crossover-kunpeng920-20261010/`, which includes dynamic
+age-score computation in both arms.
 
 This is a three-process Rust component benchmark on a Kunpeng 920 aarch64 host.
 Each process measured 20,000 iterations per cell. The reference allocates and
@@ -19,10 +22,10 @@ arms clone the selected handles, so the return-value cost is matched.
 | 64 | 1 | 2,050 ns | 350 ns | -82.93% | bitmap |
 | 64 | 4 | 2,100 ns | 1,220 ns | -41.90% | bitmap |
 
-The active candidate is deliberately bounded to at most four victims per
-selection. Larger bulk selections return `None` from `preview_bounded`, so the
-host must preserve its full-sort authority. The negative 17/8 result is retained
-in `raw.csv`; it is the reason for this fail-closed crossover boundary.
+This original candidate was bounded to at most four victims per selection. That
+boundary must no longer be used: once dynamic age-score computation is included,
+only the single-victim cells remain positive. The negative 17/8 result is retained
+in `raw.csv`.
 
 Five unit tests cover exact full-sort equivalence across 64 generated records,
 generation safety, pinned/pending eligibility updates, slot reuse, capacity

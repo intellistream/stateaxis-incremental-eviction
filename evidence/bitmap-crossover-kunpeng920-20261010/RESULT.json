@@ -1,9 +1,10 @@
 {
   "schema_version": "stateaxis-mod-component-crossover/v1",
-  "evidence_label": "component-repeated-crossover-positive",
+  "evidence_label": "component-crossover-superseded-precomputed-utility",
   "performance_qualified": false,
   "mod_id": "org.vllm-hust.stateaxis-incremental-eviction",
   "mechanism": "generation-safe-64-slot-eligibility-bitmap",
+  "superseded_for_activation_by": "../bitmap-dynamic-age-crossover-kunpeng920-20261010/RESULT.json",
   "host": {
     "architecture": "aarch64",
     "cpu": "Kunpeng 920",

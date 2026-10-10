@@ -20,16 +20,25 @@ pub struct EvictionFlags {
 struct Entry {
     handle: String,
     generation: u64,
-    utility: f64,
+    value_density: f64,
     last_access_ms: u64,
     soft_protected: bool,
 }
 
 impl Entry {
-    fn eviction_cmp(&self, other: &Self) -> Ordering {
+    fn utility_at(&self, now_ms: u64) -> f64 {
+        let age_s = ((now_ms.saturating_sub(self.last_access_ms)) as f64 / 1000.0).max(1.0);
+        self.value_density / age_s.sqrt()
+    }
+
+    fn eviction_cmp_at(&self, other: &Self, now_ms: u64) -> Ordering {
+        self.eviction_cmp_with_scores(self.utility_at(now_ms), other, other.utility_at(now_ms))
+    }
+
+    fn eviction_cmp_with_scores(&self, utility: f64, other: &Self, other_utility: f64) -> Ordering {
         self.soft_protected
             .cmp(&other.soft_protected)
-            .then_with(|| self.utility.total_cmp(&other.utility))
+            .then_with(|| utility.total_cmp(&other_utility))
             .then_with(|| self.last_access_ms.cmp(&other.last_access_ms))
             .then_with(|| self.handle.cmp(&other.handle))
             .then_with(|| self.generation.cmp(&other.generation))
@@ -53,15 +62,15 @@ impl BitmapEvictionIndex {
     /// Return `None` when bulk eviction should use the existing full-sort
     /// authority. The bitmap path is intentionally limited to the region in
     /// which its bounded scan wins the measured crossover.
-    pub fn preview_bounded(&self, max_states: usize) -> Option<Vec<String>> {
-        (max_states <= 4).then(|| self.preview(max_states))
+    pub fn preview_bounded_at(&self, max_states: usize, now_ms: u64) -> Option<Vec<String>> {
+        (max_states <= 1).then(|| self.preview_at(max_states, now_ms))
     }
 
     pub fn upsert(
         &mut self,
         handle: impl Into<String>,
         generation: u64,
-        utility: f64,
+        value_density: f64,
         last_access_ms: u64,
         flags: EvictionFlags,
     ) -> Result<(), CapacityError> {
@@ -85,7 +94,7 @@ impl BitmapEvictionIndex {
         self.slots[slot] = Some(Entry {
             handle,
             generation,
-            utility,
+            value_density,
             last_access_ms,
             soft_protected: flags.soft_protected,
         });
@@ -96,6 +105,38 @@ impl BitmapEvictionIndex {
             self.eligible |= bit;
         }
         Ok(())
+    }
+
+    /// Refresh a known generation without allocating or replacing its handle.
+    /// Returns false for unknown or stale identities so callers can fail closed
+    /// or perform an explicit generation replacement through `upsert`.
+    pub fn refresh(
+        &mut self,
+        handle: &str,
+        generation: u64,
+        value_density: f64,
+        last_access_ms: u64,
+        flags: EvictionFlags,
+    ) -> bool {
+        let Some(&slot) = self.by_handle.get(handle) else {
+            return false;
+        };
+        let Some(entry) = self.slots[slot].as_mut() else {
+            return false;
+        };
+        if entry.generation != generation {
+            return false;
+        }
+        entry.value_density = value_density;
+        entry.last_access_ms = last_access_ms;
+        entry.soft_protected = flags.soft_protected;
+        let bit = 1_u64 << slot;
+        if flags.pinned || flags.pending {
+            self.eligible &= !bit;
+        } else {
+            self.eligible |= bit;
+        }
+        true
     }
 
     pub fn invalidate(&mut self, handle: &str, generation: u64) -> bool {
@@ -114,36 +155,41 @@ impl BitmapEvictionIndex {
         true
     }
 
-    fn victim_slot(&self, bitmap: u64) -> Option<usize> {
+    fn victim_slot_at(&self, bitmap: u64, now_ms: u64) -> Option<usize> {
         let mut remaining = bitmap;
         let mut victim: Option<usize> = None;
+        let mut victim_utility = 0.0;
         while remaining != 0 {
             let slot = remaining.trailing_zeros() as usize;
             remaining &= remaining - 1;
             let entry = self.slots[slot]
                 .as_ref()
                 .expect("eligible bit must reference a live slot");
+            let utility = entry.utility_at(now_ms);
             if victim.is_none_or(|current| {
-                entry.eviction_cmp(
+                entry.eviction_cmp_with_scores(
+                    utility,
                     self.slots[current]
                         .as_ref()
                         .expect("selected victim must remain live"),
+                    victim_utility,
                 ) == Ordering::Less
             }) {
                 victim = Some(slot);
+                victim_utility = utility;
             }
         }
         victim
     }
 
-    pub fn preview(&self, max_states: usize) -> Vec<String> {
+    pub fn preview_at(&self, max_states: usize, now_ms: u64) -> Vec<String> {
         if max_states > 4 {
-            return self.preview_many(max_states);
+            return self.preview_many_at(max_states, now_ms);
         }
         let mut remaining = self.eligible;
         let mut victims = Vec::with_capacity(max_states.min(remaining.count_ones() as usize));
         while victims.len() < max_states {
-            let Some(slot) = self.victim_slot(remaining) else {
+            let Some(slot) = self.victim_slot_at(remaining, now_ms) else {
                 break;
             };
             victims.push(
@@ -158,7 +204,7 @@ impl BitmapEvictionIndex {
         victims
     }
 
-    fn preview_many(&self, max_states: usize) -> Vec<String> {
+    fn preview_many_at(&self, max_states: usize, now_ms: u64) -> Vec<String> {
         let mut slots = [0_usize; MAX_BITMAP_STATES];
         let mut len = 0;
         let mut remaining = self.eligible;
@@ -171,10 +217,11 @@ impl BitmapEvictionIndex {
             self.slots[*left]
                 .as_ref()
                 .expect("eligible bit must reference a live slot")
-                .eviction_cmp(
+                .eviction_cmp_at(
                     self.slots[*right]
                         .as_ref()
                         .expect("eligible bit must reference a live slot"),
+                    now_ms,
                 )
         };
         let selected = len.min(max_states);
@@ -194,8 +241,8 @@ impl BitmapEvictionIndex {
             .collect()
     }
 
-    pub fn pop_victim(&mut self) -> Option<String> {
-        let slot = self.victim_slot(self.eligible)?;
+    pub fn pop_victim_at(&mut self, now_ms: u64) -> Option<String> {
+        let slot = self.victim_slot_at(self.eligible, now_ms)?;
         let entry = self.slots[slot]
             .take()
             .expect("selected victim must remain live");
@@ -231,6 +278,7 @@ mod tests {
 
     #[test]
     fn bitmap_order_matches_full_sort_reference() {
+        const NOW_MS: u64 = 20_000;
         let mut index = BitmapEvictionIndex::default();
         let mut reference = Vec::new();
         let mut state = 0x9e37_79b9_u64;
@@ -238,7 +286,7 @@ mod tests {
             state = state
                 .wrapping_mul(6_364_136_223_846_793_005)
                 .wrapping_add(1);
-            let utility = ((state >> 11) % 37) as f64 / 7.0;
+            let value_density = ((state >> 11) % 37) as f64 / 7.0;
             let last_access_ms = (state >> 19) % 10_000;
             let entry_flags = flags(i % 13 == 0, i % 17 == 0, i % 7 == 0);
             let handle = format!("state-{i:02}");
@@ -246,7 +294,7 @@ mod tests {
                 .upsert(
                     handle.clone(),
                     (i % 5) as u64,
-                    utility,
+                    value_density,
                     last_access_ms,
                     entry_flags,
                 )
@@ -254,7 +302,7 @@ mod tests {
             if !entry_flags.pinned && !entry_flags.pending {
                 reference.push((
                     entry_flags.soft_protected,
-                    utility,
+                    value_density / (((NOW_MS - last_access_ms) as f64 / 1000.0).max(1.0)).sqrt(),
                     last_access_ms,
                     handle,
                     (i % 5) as u64,
@@ -270,7 +318,7 @@ mod tests {
                 .then_with(|| left.4.cmp(&right.4))
         });
         let expected: Vec<_> = reference.into_iter().map(|row| row.3).collect();
-        assert_eq!(index.preview(MAX_BITMAP_STATES), expected);
+        assert_eq!(index.preview_at(MAX_BITMAP_STATES, NOW_MS), expected);
     }
 
     #[test]
@@ -283,12 +331,12 @@ mod tests {
             .upsert("same", 2, 10.0, 2, flags(false, false, false))
             .unwrap();
         assert!(!index.invalidate("same", 1));
-        assert_eq!(index.preview(1), ["same"]);
+        assert_eq!(index.preview_at(1, 1_000), ["same"]);
         assert!(index.invalidate("same", 2));
         index
             .upsert("replacement", 1, 1.0, 3, flags(false, false, false))
             .unwrap();
-        assert_eq!(index.pop_victim().as_deref(), Some("replacement"));
+        assert_eq!(index.pop_victim_at(1_000).as_deref(), Some("replacement"));
         assert!(index.is_empty());
     }
 
@@ -303,11 +351,27 @@ mod tests {
             .upsert("state", 1, 1.0, 1, flags(true, false, false))
             .unwrap();
         assert_eq!(index.eligible_len(), 0);
-        assert!(index.preview(1).is_empty());
+        assert!(index.preview_at(1, 1_000).is_empty());
         index
             .upsert("state", 1, 1.0, 1, flags(false, false, true))
             .unwrap();
-        assert_eq!(index.preview(1), ["state"]);
+        assert_eq!(index.preview_at(1, 1_000), ["state"]);
+    }
+
+    #[test]
+    fn refresh_is_generation_checked_and_reorders_without_handle_replacement() {
+        let mut index = BitmapEvictionIndex::default();
+        index
+            .upsert("first", 2, 1.0, 1, flags(false, false, false))
+            .unwrap();
+        index
+            .upsert("second", 1, 2.0, 2, flags(false, false, false))
+            .unwrap();
+        assert!(!index.refresh("first", 1, 9.0, 9, flags(false, false, false)));
+        assert!(index.refresh("first", 2, 3.0, 3, flags(false, false, false)));
+        assert_eq!(index.preview_at(2, 1_000), ["second", "first"]);
+        assert!(index.refresh("second", 1, 0.0, 0, flags(true, false, false)));
+        assert_eq!(index.preview_at(2, 1_000), ["first"]);
     }
 
     #[test]
@@ -329,7 +393,7 @@ mod tests {
             .unwrap_err();
         assert_eq!(error.capacity, MAX_BITMAP_STATES);
         assert_eq!(index.len(), MAX_BITMAP_STATES);
-        assert_eq!(index.preview(1), ["state-0"]);
+        assert_eq!(index.preview_at(1, 1_000), ["state-0"]);
     }
 
     #[test]
@@ -346,7 +410,8 @@ mod tests {
                 )
                 .unwrap();
         }
-        assert_eq!(index.preview_bounded(4).unwrap().len(), 4);
-        assert!(index.preview_bounded(8).is_none());
+        assert!(index.preview_bounded_at(0, 1_000).unwrap().is_empty());
+        assert_eq!(index.preview_bounded_at(1, 1_000).unwrap().len(), 1);
+        assert!(index.preview_bounded_at(2, 1_000).is_none());
     }
 }
