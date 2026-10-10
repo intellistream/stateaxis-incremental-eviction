@@ -1,0 +1,19 @@
+[package]
+name = "stateaxis-incremental-eviction"
+version = "0.2.0"
+edition = "2021"
+description = "Generation-safe bitmap eviction index for bounded StateAxis sets"
+license = "Apache-2.0"
+
+[lib]
+name = "stateaxis_incremental_eviction"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bitmap-crossover"
+path = "src/bin/bitmap_crossover.rs"
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = "thin"

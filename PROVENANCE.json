@@ -9,7 +9,13 @@
   "copied_evidence": "evidence/issue10-incremental-eviction-closure-20260814",
   "copied_evidence_sha256": "d834c9fed8873d494a838935a2ad02a8f0ef05cc71002b167fe4699d5460ead6",
   "qualification_inherited": false,
-  "implementation_extracted": false,
+  "implementation_extracted": true,
+  "implementation_boundary": {
+    "path": "native",
+    "mechanism": "generation-safe-64-slot-eligibility-bitmap",
+    "activation_status": "not_wired",
+    "performance_qualified": false
+  },
   "licensing": {
     "scaffolding": "Apache-2.0",
     "copied_evidence": "No additional license grant is inferred from this split."
